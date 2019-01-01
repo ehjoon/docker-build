@@ -1,0 +1,96 @@
+From cf05aa0603d00243a21a92f45ac785d68371dafe Mon Sep 17 00:00:00 2001
+From: "hyungjoon.lee" <hyungjoon.lee@lge.com>
+Date: Tue, 1 Jan 2019 11:27:26 +0900
+Subject: [PATCH] Fix luna boost fix for iepg
+
+Change-Id: Ic6d70c1d74f0afc19cf1cd4ae336748445e3f00f
+---
+ CMakeLists.txt              |  1 +
+ lib/shared_memory_boost.cpp | 24 ++++++++++++------------
+ 2 files changed, 13 insertions(+), 12 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 538ea0f..35a7d9e 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -43,6 +43,7 @@ webos_add_compiler_flags(ALL ${GLIB2_CFLAGS})
+ 
+ pkg_check_modules(LUNASERVICE REQUIRED luna-service2)
+ #include_directories(${LUNASERVICE_INCLUDE_DIRS})
++include_directories(/usr/local/webos/usr/include/luna-service2/)
+ webos_add_compiler_flags(ALL ${LUNASERVICE_CFLAGS})
+ 
+ pkg_check_modules(PMLOG REQUIRED PmLogLib)
+diff --git a/lib/shared_memory_boost.cpp b/lib/shared_memory_boost.cpp
+index defc7c6..5682570 100644
+--- a/lib/shared_memory_boost.cpp
++++ b/lib/shared_memory_boost.cpp
+@@ -91,8 +91,8 @@ bool SharedVariableBoost::create(const std::string& id, int size)
+ 
+     try {
+         m_shm = managed_shared_memory(create_only, id.c_str(), size);
+-        m_shm.setNoLockFlag(true);
+-        m_shm.get_segment_manager()->setSegmentNoLockFlag(true);
++        //m_shm.setNoLockFlag(true);
++        //m_shm.get_segment_manager()->setSegmentNoLockFlag(true);
+ 
+         LockStatus* lstat = LockChecker::getInstance()->getLockStatus(SHARED_VARIABLE_PATH);
+         lstat->trylock(__FUNCTION__);
+@@ -152,8 +152,8 @@ bool SharedVariableBoost::open(const std::string& id)
+ 
+     try {
+         m_shm = managed_shared_memory(open_only, id.c_str());
+-        m_shm.setNoLockFlag(true);
+-        m_shm.get_segment_manager()->setSegmentNoLockFlag(true);
++        //m_shm.setNoLockFlag(true);
++        //m_shm.get_segment_manager()->setSegmentNoLockFlag(true);
+ 
+         LockStatus* lstat = LockChecker::getInstance()->getLockStatus(SHARED_VARIABLE_PATH);
+         lstat->trylock(__FUNCTION__);
+@@ -451,8 +451,8 @@ bool SharedVectorBoost::create(const std::string& id, int length, int size)
+ 
+     try {
+         m_shm = managed_shared_memory(create_only, id.c_str(), size);
+-        m_shm.setNoLockFlag(true);
+-        m_shm.get_segment_manager()->setSegmentNoLockFlag(true);
++        //m_shm.setNoLockFlag(true);
++        //m_shm.get_segment_manager()->setSegmentNoLockFlag(true);
+ 
+         StringAllocator stringallocator(m_shm.get_segment_manager());
+ 
+@@ -515,8 +515,8 @@ bool SharedVectorBoost::open(const std::string& id)
+ 
+     try {
+         m_shm = managed_shared_memory(open_only, id.c_str());
+-        m_shm.setNoLockFlag(true);
+-        m_shm.get_segment_manager()->setSegmentNoLockFlag(true);
++        //m_shm.setNoLockFlag(true);
++        //m_shm.get_segment_manager()->setSegmentNoLockFlag(true);
+ 
+         StringAllocator stringallocator(m_shm.get_segment_manager());
+ 
+@@ -784,8 +784,8 @@ bool SharedChannelList::create(const std::string& id, int length, int size)
+ 
+     try {
+         m_shm = managed_shared_memory(create_only, id.c_str(), size);
+-        m_shm.setNoLockFlag(true);
+-        m_shm.get_segment_manager()->setSegmentNoLockFlag(true);
++        //m_shm.setNoLockFlag(true);
++        //m_shm.get_segment_manager()->setSegmentNoLockFlag(true);
+ 
+         LockStatus* lstat = LockChecker::getInstance()->getLockStatus(SHARED_CHANNEL_PATH);
+         lstat->trylock(__FUNCTION__);
+@@ -850,8 +850,8 @@ bool SharedChannelList::open(const std::string& id)
+ 
+     try {
+         m_shm = managed_shared_memory(open_only, id.c_str());
+-        m_shm.setNoLockFlag(true);
+-        m_shm.get_segment_manager()->setSegmentNoLockFlag(true);
++        //m_shm.setNoLockFlag(true);
++        //m_shm.get_segment_manager()->setSegmentNoLockFlag(true);
+ 
+         LockStatus* lstat = LockChecker::getInstance()->getLockStatus(SHARED_CHANNEL_PATH);
+         lstat->trylock(__FUNCTION__);
+-- 
+2.17.1
+

@@ -1,0 +1,24 @@
+From f756371484a8d7b611ab86e5032bee982323e99c Mon Sep 17 00:00:00 2001
+From: "hyungjoon.lee" <hyungjoon.lee@lge.com>
+Date: Tue, 1 Jan 2019 11:25:03 +0900
+Subject: [PATCH] Fix luna-service include for faultmanager
+
+---
+ CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 619fd97..5fa6a57 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -16,6 +16,7 @@ include_directories(${GTHREAD2_INCLUDE_DIRS})
+ webos_add_compiler_flags(ALL ${GTHREAD2_CFLAGS_OTHER})
+ 
+ pkg_check_modules(LS2 REQUIRED luna-service2)
++include_directories(/usr/local/webos/usr/include/luna-service2/)
+ include_directories(${LS2_INCLUDE_DIRS})
+ webos_add_compiler_flags(ALL ${LS2_CFLAGS_OTHER})
+ 
+-- 
+2.17.1
+
