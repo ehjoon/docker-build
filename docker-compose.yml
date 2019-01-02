@@ -1,0 +1,13 @@
+version: '2.3'
+
+services:
+  iepg:
+    image: iepg-build:latest
+    volumes:
+      - type: bind
+        source: /home/ehjoon/work/docker-source/iepg
+        target: /work
+    ports:
+      - "1404:22"
+    environment:
+      - LD_LIBRARY_PATH=/usr/local/webos/usr/lib

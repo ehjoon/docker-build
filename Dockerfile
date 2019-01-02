@@ -23,9 +23,10 @@ RUN apt-get install -y -qq libjson-c-dev
 RUN apt-get install -y -qq libcurl4-openssl-dev
 RUN apt-get install -y -qq libgtest-dev
 RUN apt-get install -y -qq libsqlite3-dev
-
-RUN echo '156.147.61.49 wall.lge.com' >> /etc/hosts
-RUN ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa -C 'hyungjoon.lee@lge.com'
+RUN apt-get install -y -qq libssl-dev
+RUN apt-get install -y -qq libgtest-dev
+RUN apt-get install -y -qq openssh-server
+RUN apt-get install -y -qq libc6-dbg gdb valgrind
 
 COPY ./cmake-modules-webos /source/cmake-modules-webos
 RUN cd /source/cmake-modules-webos && \
@@ -66,27 +67,20 @@ RUN cd /source/faultmanager/ && \
     make && \
     make install
 
-RUN apt-get install -y -qq libssl-dev
-RUN apt-get install -y -qq libgtest-dev
 RUN mkdir -p /usr/local/webos/usr/src/gtest && \
     cp -r /usr/src/gtest/* /usr/local/webos/usr/src/gtest
 
-COPY ./iepg /source/iepg
-RUN cd /source/iepg/ && \
-    mkdir build && \
-    cd build && \
-    cmake ../ && \
-    make
-
-RUN apt-get install -y -qq openssh-server
-
-RUN apt-get update && apt-get install -y openssh-server
 RUN mkdir /var/run/sshd
-RUN echo 'root:screencast' | chpasswd
+RUN echo 'root:root' | chpasswd
 RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
+
+RUN echo '156.147.61.49 wall.lge.com' >> /etc/hosts
+RUN ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa -C 'hyungjoon.lee@lge.com'
+
+RUN echo 'export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/webos/usr/lib' >> /root/.bashrc
 
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
