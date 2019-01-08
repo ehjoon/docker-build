@@ -1,13 +1,17 @@
-version: '2.3'
+version: '3.3'
 
 services:
   iepg:
     image: iepg-build:latest
     volumes:
       - type: bind
-        source: /home/ehjoon/work/docker-source/iepg
+        source: /home/ehjoon/docker-build/iepg
         target: /work
     ports:
       - "1404:22"
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp=unconfined
     environment:
       - LD_LIBRARY_PATH=/usr/local/webos/usr/lib
